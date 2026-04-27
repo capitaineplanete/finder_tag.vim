@@ -1,0 +1,81 @@
+# finder_tag.vim
+
+A Vim plugin for applying macOS Finder tags to the
+file you're currently editing. The tag shows up in
+Finder, Spotlight can search by it, and if you
+want, the StatusLine changes colour to match. All
+without leaving Vim.
+
+Works by calling `xattr` to write the tag metadata
+and `mdls` to read it back. Standard macOS tools,
+no dependencies.
+
+**Commands**
+
+`:Tag` opens an interactive prompt. It asks for a
+name, then a colour. Both are optional, you can
+have one without the other. If the file already
+has a tag it tells you before asking anything.
+
+`:TagRemove` removes whatever tag is on the
+current file, with a confirmation prompt.
+
+`:TagLast` re-applies the last tag you used this
+session. Useful if you're tagging a bunch of files
+the same way.
+
+**StatusLine integration**
+
+Two things can happen in the StatusLine. The
+background can tint to match the tag colour, and
+the tag name can appear inline. Both are on by
+default.
+
+If you have your own statusline, add
+`%{FinderTagStatusText()}` wherever you want the
+name to appear. If you don't have a custom
+statusline and just want the plugin to handle it,
+set `g:finder_tag_set_statusline = 1`.
+
+```vim
+" Defaults, only set these if you want to change
+them
+let g:finder_tag_statusline_colour = 1   " tint StatusLine bg to tag colour
+let g:finder_tag_statusline_text   = 1   " show tag name in StatusLine
+let g:finder_tag_set_statusline    = 0   " let plugin own the statusline entirely
+let g:finder_tag_auto_refresh      = 1   " re-read tag from disk on BufEnter
+```
+
+**Colour reference**
+
+`0` none, `1` grey, `2` green, `3` purple, `4`
+blue, `5` yellow, `6` orange, `7` red
+
+You can use the name or the number anywhere a
+colour is expected.
+
+**Public API**
+
+The `s:` functions are script-local, so if you
+want to call tagging from your vimrc you use the
+wrapper:
+
+```vim
+call FinderTag('Read', 2)         " name + colour index
+command! TagRead call FinderTag('Read', 2)
+```
+
+`TagRead` isn't defined by the plugin on purpose.
+Personal commands like that belong in your vimrc.
+
+**Installation**
+
+Drop `finder_tag.vim` into
+`$XDG_CONFIG_HOME/vim/plugin/`. Or point your
+plugin manager at this repo.
+
+macOS only.
+
+**License**
+
+BSD
